@@ -2,10 +2,10 @@ FROM ubuntu:14.04
 
 LABEL vesion=0.1.0
 LABEL usage="\
-			docker run -p 8080:8080                        \
-				-v /path/to/www:/ewd3/www                    \
-				-v /path/to/ewd-startup-file.js:/ewd3/app.js \
-				bla/ewd3-globalsdb 													 \
+      docker run -p 8080:8080                          \
+        -v /path/to/www:/ewd3/www                      \
+        -v /path/to/ewd-startup-file.js:/ewd3/app.js   \
+        todo/ewd3-globalsdb                            \
 "
 
 RUN sudo apt-get update
@@ -34,19 +34,19 @@ RUN git clone https://github.com/creationix/nvm.git "$NVM_DIR"
 RUN cd "$NVM_DIR" && git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" origin`
 ENV NODE_VERSION 4.5.0
 RUN . $NVM_DIR/nvm.sh \
-		&& nvm install $NODE_VERSION
+    && nvm install $NODE_VERSION
 
 # ewd-3
 RUN mkdir $EWD3_DIR
 RUN cd $EWD3_DIR \
-		&& $NVM_DIR/versions/node/v$NODE_VERSION/bin/npm install ewd-xpress \
-		&& $NVM_DIR/versions/node/v$NODE_VERSION/bin/npm install ewd-xpress-monitor \
-		&& $NVM_DIR/versions/node/v$NODE_VERSION/bin/npm install ewd-client
+    && $NVM_DIR/versions/node/v$NODE_VERSION/bin/npm install ewd-xpress \
+    && $NVM_DIR/versions/node/v$NODE_VERSION/bin/npm install ewd-xpress-monitor \
+    && $NVM_DIR/versions/node/v$NODE_VERSION/bin/npm install ewd-client
 
 # cache.node
 RUN cd $EWD3_DIR/node_modules \
-		&& wget https://s3-eu-west-1.amazonaws.com/cache.node/build-113/linux/cache421.node \
-		&& mv cache421.node cache.node
+    && wget https://s3-eu-west-1.amazonaws.com/cache.node/build-113/linux/cache421.node \
+    && mv cache421.node cache.node
 RUN cp $EWD3_DIR/node_modules/ewd-xpress/example/ewd-xpress-globalsdb.js $EWD3_DIR/ewd-xpress.js
 
 # RUN mkdir $EWD3_DIR/www && mkdir $EWD3_DIR/www/ewd-xpress-monitor
